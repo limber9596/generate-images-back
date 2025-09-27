@@ -66,7 +66,7 @@ async function generateImageFromBoceto_s(bocetoPath, prompt, tempDir = "/tmp") {
 }
 
 /////////////////////////////////////////////////////////////
-async function generateImageFromText_s(prompt) {
+async function generateImageFromText_s(prompt, tempDir = "/tmp") {
   if (!prompt) throw new Error("No se recibió prompt");
 
   const output = await replicate.run(
@@ -94,8 +94,10 @@ async function generateImageFromText_s(prompt) {
   const imageUrl = output[0].url();
   const res = await fetch(imageUrl);
   const buffer = await res.arrayBuffer();
-  const fileName = "output_text2img.png";
-  fs.writeFileSync(fileName, Buffer.from(buffer));
+
+  // Guardar en /tmp
+  const fileName = path.join(tempDir, "output_text2img.png");
+  await fs.promises.writeFile(fileName, Buffer.from(buffer));
 
   return { fileName, imageUrl };
 }
