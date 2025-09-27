@@ -8,7 +8,7 @@ const {
 const router = express.Router();
 
 // Configuración de Multer directamente en la ruta
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ dest: "/tmp" });
 
 // Endpoint para generar imagen desde texto
 router.post("/generate-image-text", upload.none(), generateImageFromText);

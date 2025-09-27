@@ -28,12 +28,18 @@ async function generateImageWithMask(req, res) {
     const maskBuffer = await moreLigth(await fs.promises.readFile(boceto.path));
 
     // Crear carpeta temp si no existe
-    const tempDir = path.join(__dirname, "../temp");
+    // const tempDir = path.join(__dirname, "../temp");
+    // await fs.promises.mkdir(tempDir, { recursive: true });
+
+    // // Guardar buffer como archivo temporal
+    // const tempPath = path.join(tempDir, `${Date.now()}-mask.png`);
+    // await fs.promises.writeFile(tempPath, maskBuffer);
+    const tempDir = "/tmp"; // carpeta temporal en Vercel
     await fs.promises.mkdir(tempDir, { recursive: true });
 
-    // Guardar buffer como archivo temporal
     const tempPath = path.join(tempDir, `${Date.now()}-mask.png`);
     await fs.promises.writeFile(tempPath, maskBuffer);
+    ////////////////////////////////////////////////////////7
     if (!prompt) {
       console.error("No se recibió prompt");
       return res.status(400).json({ error: "No se recibió prompt" });
