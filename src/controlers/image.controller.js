@@ -39,25 +39,26 @@ async function generateImageWithMask(req, res) {
       return res.status(400).json({ error: "No se recibió boceto" });
     }
 
-    // Procesar el boceto → buffer aclarado
+    // Leer el archivo enviado
     console.log("Leyendo archivo del boceto...");
     const bocetoBuffer = await fs.promises.readFile(boceto.path);
     console.log("Archivo leído, tamaño:", bocetoBuffer.length);
 
+    // Procesar el boceto (aclarar bordes)
     const maskBuffer = await moreLigth(bocetoBuffer);
     console.log("Buffer aclarado listo, tamaño:", maskBuffer.length);
 
-    // Crear carpeta temporal si no existe
+    // Guardar en carpeta temporal de Vercel
     const tempDir = "/tmp";
     await fs.promises.mkdir(tempDir, { recursive: true });
 
-    const tempPath = path.join(tempDir, `${Date.now()}-mask.png`);
-    await fs.promises.writeFile(tempPath, maskBuffer);
-    console.log("Archivo temporal guardado en:", tempPath);
+    const maskPath = path.join(tempDir, `${Date.now()}-mask.png`);
+    await fs.promises.writeFile(maskPath, maskBuffer);
+    console.log("Archivo temporal guardado en:", maskPath);
 
-    // Llamada a la función que genera la imagen final
+    // Aquí asegúrate de que generateImageFromBoceto_s también use /tmp para cualquier archivo
     console.log("Llamando a generateImageFromBoceto_s...");
-    const result = await generateImageFromBoceto_s(tempPath, prompt);
+    const result = await generateImageFromBoceto_s(maskPath, prompt, tempDir);
     console.log("Resultado de img2img:", result);
 
     res.json(result);
