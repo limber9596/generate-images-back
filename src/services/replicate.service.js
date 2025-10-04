@@ -11,7 +11,7 @@ async function generateImageFromBoceto_s(bocetoPath, prompt, tempDir = "/tmp") {
   const buffer_img = await fs.promises.readFile(bocetoPath);
   const image = await Jimp.read(buffer_img);
 
-  image.invert();
+  // image.invert();
   const bocetoBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
 
   // Convertir a base64
@@ -36,8 +36,8 @@ async function generateImageFromBoceto_s(bocetoPath, prompt, tempDir = "/tmp") {
         controlnet_1_start: 0,
         controlnet_1_end: 1,
         controlnet_1_conditioning_scale: 0.7,
-        guidance_scale: 9,
-        num_inference_steps: 60,
+        guidance_scale: 7,
+        num_inference_steps: 30,
         apply_watermark: false,
         prompt_strength: 0.6,
         sizing_strategy: "width_height",
@@ -55,14 +55,14 @@ async function generateImageFromBoceto_s(bocetoPath, prompt, tempDir = "/tmp") {
   );
 
   const imageUrl = output[1].url();
-  const res = await fetch(imageUrl);
-  const buffer = await res.arrayBuffer();
+  // const res = await fetch(imageUrl);
+  // const buffer = await res.arrayBuffer();
 
-  // Guardar en /tmp
-  const fileName = path.join(tempDir, "output_img2img.png");
-  await fs.promises.writeFile(fileName, Buffer.from(buffer));
+  // // Guardar en /tmp
+  // const fileName = path.join(tempDir, "output_img2img.png");
+  // await fs.promises.writeFile(fileName, Buffer.from(buffer));
 
-  return { fileName, imageUrl };
+  return { imageUrl };
 }
 
 /////////////////////////////////////////////////////////////
@@ -92,14 +92,14 @@ async function generateImageFromText_s(prompt, tempDir = "/tmp") {
   );
 
   const imageUrl = output[0].url();
-  const res = await fetch(imageUrl);
-  const buffer = await res.arrayBuffer();
+  // const res = await fetch(imageUrl);
+  // const buffer = await res.arrayBuffer();
 
-  // Guardar en /tmp
-  const fileName = path.join(tempDir, "output_text2img.png");
-  await fs.promises.writeFile(fileName, Buffer.from(buffer));
+  // // Guardar en /tmp
+  // const fileName = path.join(tempDir, "output_text2img.png");
+  // await fs.promises.writeFile(fileName, Buffer.from(buffer));
 
-  return { fileName, imageUrl };
+  return { imageUrl };
 }
 
 // Exportar todas las funciones como módulo CommonJS
